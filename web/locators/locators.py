@@ -28,3 +28,4 @@ class CheckoutLocators:
     CONTINUE_BUTTON = (By.ID, "continue")
     FINISH_BUTTON = (By.ID, "finish")
     COMPLETE_HEADER = (By.CLASS_NAME, "complete-header")
+    ERROR_MESSAGE = (By.CSS_SELECTOR, "[data-test='error']")
