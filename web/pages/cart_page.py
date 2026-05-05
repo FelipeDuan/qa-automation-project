@@ -1,5 +1,8 @@
 from web.pages.base_page import BasePage
 from web.locators.locators import CartLocators
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 
 
 class CartPage(BasePage):
@@ -12,7 +15,9 @@ class CartPage(BasePage):
 
     def remove_item(self):
         self.click(CartLocators.REMOVE_BUTTON)
+        time.sleep(0.5)
         
     def is_cart_empty(self):
+        time.sleep(0.3)
         items = self.driver.find_elements(*CartLocators.CART_ITEMS)
         return len(items) == 0

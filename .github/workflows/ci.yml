@@ -7,6 +7,11 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   api-tests:
     name: "API Tests - Petstore"
@@ -31,7 +36,7 @@ jobs:
         run: |
           pytest api/tests/ -v --tb=short --junit-xml=api-test-results.xml
 
-      - name: Publish test results
+      - name: Publish API Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
@@ -57,13 +62,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run web tests (headless)
+      - name: Run all web tests
         env:
           CI: true
         run: |
           pytest web/tests/ -v --tb=short --junit-xml=web-test-results.xml
 
-      - name: Publish test results
+      - name: Publish Web Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
@@ -90,7 +95,12 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run smoke tests
-        env:
-          CI: true
         run: |
-          pytest -m smoke -v --tb=short
+          pytest -m smoke -v --tb=short --junit-xml=smoke-test-results.xml
+
+      - name: Publish Smoke Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: smoke-test-results.xml
+          check_name: Smoke Test Results
