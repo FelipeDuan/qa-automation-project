@@ -1,12 +1,11 @@
 from web.pages.base_page import BasePage
 from web.locators.locators import LoginLocators
+from api.utils.config import WEB_BASE_URL
 
 
 class LoginPage(BasePage):
-    URL = "https://www.saucedemo.com/"
-
     def open(self):
-        self.driver.get(self.URL)
+        self.driver.get(WEB_BASE_URL)
 
     def login(self, username, password):
         self.type_text(LoginLocators.USERNAME, username)
@@ -15,3 +14,6 @@ class LoginPage(BasePage):
 
     def get_error_message(self):
         return self.get_text(LoginLocators.ERROR_MESSAGE)
+    
+    def is_error_displayed(self):
+        return self.is_visible(LoginLocators.ERROR_MESSAGE)
