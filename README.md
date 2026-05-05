@@ -277,8 +277,6 @@ driver = create_driver()  # Auto-detecta CI e configura headless
 - [TEST_STRATEGY.md](docs/TEST_STRATEGY.md) - Estratégia e cobertura de testes
 - [CONTRIBUTING.md](docs/CONTRIBUTING.md) - Guia para contribuir
 - [DECISIONS.md](docs/DECISIONS.md) - ADRs e lições aprendidas
-- [BUGFIX.md](docs/BUGFIX.md) - Correção do bug crítico de TimeoutException
-- [CHANGELOG.md](docs/CHANGELOG.md) - Histórico completo de mudanças
 
 ---
 

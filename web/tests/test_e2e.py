@@ -8,87 +8,57 @@ from web.pages.checkout_page import CheckoutPage
 @pytest.mark.e2e
 class TestE2ESauceDemo:
     def test_complete_purchase_flow(self, driver):
-        print("\n[TEST] Starting complete purchase flow...")
-        
         login_page = LoginPage(driver)
         login_page.open()
-        print("[TEST] Page opened")
-        
         login_page.login("standard_user", "secret_sauce")
-        print("[TEST] Login completed")
 
         inventory_page = InventoryPage(driver)
         assert inventory_page.is_loaded()
-        print("[TEST] Inventory page loaded")
         
         inventory_page.add_first_item_to_cart()
-        print("[TEST] Item added to cart")
-        
         cart_count = inventory_page.get_cart_count()
-        print(f"[TEST] Cart count: {cart_count}")
         assert cart_count == "1"
         
         inventory_page.go_to_cart()
-        print("[TEST] Navigated to cart")
 
         cart_page = CartPage(driver)
         items_count = cart_page.get_cart_items_count()
-        print(f"[TEST] Cart items count: {items_count}")
         assert items_count == 1
         
         cart_page.proceed_to_checkout()
-        print("[TEST] Proceeded to checkout")
 
         checkout_page = CheckoutPage(driver)
         checkout_page.fill_info("QA", "Tester", "12345")
-        print("[TEST] Filled checkout info")
-        
         checkout_page.finish_purchase()
-        print("[TEST] Finished purchase")
 
         confirmation = checkout_page.get_confirmation_message()
-        print(f"[TEST] Confirmation message: {confirmation}")
         assert "thank you" in confirmation.lower()
-        print("[TEST] ✅ Test passed!")
 
     def test_purchase_multiple_products(self, driver):
-        print("\n[TEST] Starting multiple products purchase...")
-        
         login_page = LoginPage(driver)
         login_page.open()
         login_page.login("standard_user", "secret_sauce")
-        print("[TEST] Login completed")
 
         inventory_page = InventoryPage(driver)
-        print("[TEST] Adding 3 items to cart...")
         inventory_page.add_multiple_items_to_cart(3)
         
         cart_count = inventory_page.get_cart_count()
-        print(f"[TEST] Expected: 3, Got: {cart_count}")
-        assert cart_count == "3", f"Cart count mismatch: expected 3, got {cart_count}"
+        assert cart_count == "3"
         
         inventory_page.go_to_cart()
-        print("[TEST] Navigated to cart")
 
         cart_page = CartPage(driver)
         items_count = cart_page.get_cart_items_count()
-        print(f"[TEST] Cart page shows {items_count} items")
         assert items_count == 3
         
         cart_page.proceed_to_checkout()
-        print("[TEST] Proceeded to checkout")
 
         checkout_page = CheckoutPage(driver)
         checkout_page.fill_info("Multi", "Product", "99999")
-        print("[TEST] Filled info")
-        
         checkout_page.finish_purchase()
-        print("[TEST] Finished purchase")
 
         confirmation = checkout_page.get_confirmation_message()
-        print(f"[TEST] Confirmation: {confirmation}")
         assert "thank you" in confirmation.lower()
-        print("[TEST] ✅ Test passed!")
 
     def test_remove_item_from_cart(self, driver):
         login_page = LoginPage(driver)
