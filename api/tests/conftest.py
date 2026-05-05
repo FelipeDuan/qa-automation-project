@@ -1,4 +1,5 @@
 import pytest
+import random
 from api.services.pet_service import PetService
 from api.services.user_service import UserService
 from api.services.store_service import StoreService
@@ -20,23 +21,38 @@ def store_service():
 
 
 @pytest.fixture
-def pet_payload():
+def random_id():
+    return random.randint(100000, 999999)
+
+
+@pytest.fixture
+def pet_payload(random_id):
     return {
-        "id": 999991,
-        "name": "TestDog",
+        "id": random_id,
+        "name": f"TestDog_{random_id}",
         "status": "available",
-        "photoUrls": ["http://example.com/photo.jpg"]
+        "photoUrls": ["http://example.com/photo.jpg"],
+        "category": {
+            "id": 1,
+            "name": "Dogs"
+        },
+        "tags": [
+            {
+                "id": 1,
+                "name": "test"
+            }
+        ]
     }
 
 
 @pytest.fixture
-def user_payload():
+def user_payload(random_id):
     return {
-        "id": 999991,
-        "username": "testuser_qa_auto",
+        "id": random_id,
+        "username": f"testuser_{random_id}",
         "firstName": "Test",
         "lastName": "User",
-        "email": "testqa@email.com",
+        "email": f"test_{random_id}@email.com",
         "password": "senha123",
         "phone": "11999999999",
         "userStatus": 1
@@ -44,9 +60,9 @@ def user_payload():
 
 
 @pytest.fixture
-def order_payload():
+def order_payload(random_id):
     return {
-        "id": 999991,
+        "id": random_id,
         "petId": 1,
         "quantity": 1,
         "status": "placed",
