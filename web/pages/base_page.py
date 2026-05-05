@@ -1,7 +1,9 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException
+from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException, NoSuchElementException
+from selenium.webdriver.common.by import By
 import time
 
 
@@ -9,6 +11,20 @@ class BasePage:
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 30)
+    
+    def dismiss_password_warning_popup(self):
+        """
+        Método mantido por compatibilidade, mas não é mais necessário.
+        
+        O popup de "vazamento de senha" foi resolvido através de flags do Chrome
+        em driver_factory.py:
+        - --disable-password-manager-reauthentication
+        - --disable-save-password-bubble
+        - profile.password_manager_leak_detection: False
+        
+        Este método apenas retorna False pois o popup não aparece mais.
+        """
+        return False
 
     def find_element(self, locator):
         return self.wait.until(EC.visibility_of_element_located(locator))
