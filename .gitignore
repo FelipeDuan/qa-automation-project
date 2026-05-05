@@ -14,3 +14,5 @@ htmlcov/
 .DS_Store
 *.swp
 *.swo
+*-test-results.xml
+chrome_test_profile/

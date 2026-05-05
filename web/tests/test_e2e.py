@@ -14,12 +14,17 @@ class TestE2ESauceDemo:
 
         inventory_page = InventoryPage(driver)
         assert inventory_page.is_loaded()
+        
         inventory_page.add_first_item_to_cart()
-        assert inventory_page.get_cart_count() == "1"
+        cart_count = inventory_page.get_cart_count()
+        assert cart_count == "1"
+        
         inventory_page.go_to_cart()
 
         cart_page = CartPage(driver)
-        assert cart_page.get_cart_items_count() == 1
+        items_count = cart_page.get_cart_items_count()
+        assert items_count == 1
+        
         cart_page.proceed_to_checkout()
 
         checkout_page = CheckoutPage(driver)
@@ -27,7 +32,7 @@ class TestE2ESauceDemo:
         checkout_page.finish_purchase()
 
         confirmation = checkout_page.get_confirmation_message()
-        assert "Thank you" in confirmation.lower()
+        assert "thank you" in confirmation.lower()
 
     def test_purchase_multiple_products(self, driver):
         login_page = LoginPage(driver)
@@ -36,11 +41,16 @@ class TestE2ESauceDemo:
 
         inventory_page = InventoryPage(driver)
         inventory_page.add_multiple_items_to_cart(3)
-        assert inventory_page.get_cart_count() == "3"
+        
+        cart_count = inventory_page.get_cart_count()
+        assert cart_count == "3"
+        
         inventory_page.go_to_cart()
 
         cart_page = CartPage(driver)
-        assert cart_page.get_cart_items_count() == 3
+        items_count = cart_page.get_cart_items_count()
+        assert items_count == 3
+        
         cart_page.proceed_to_checkout()
 
         checkout_page = CheckoutPage(driver)
@@ -48,7 +58,7 @@ class TestE2ESauceDemo:
         checkout_page.finish_purchase()
 
         confirmation = checkout_page.get_confirmation_message()
-        assert "Thank you" in confirmation.lower()
+        assert "thank you" in confirmation.lower()
 
     def test_remove_item_from_cart(self, driver):
         login_page = LoginPage(driver)
