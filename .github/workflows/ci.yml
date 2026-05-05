@@ -1,0 +1,42 @@
+name: QA Automation Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  api-tests:
+    name: "Testes de API - Petstore"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Executar testes de API
+        run: pytest api/tests/ -v
+
+  web-tests:
+    name: "Testes Web - SauceDemo"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Executar testes web (headless)
+        env:
+          CI: true
+        run: pytest web/tests/ -v
