@@ -1,42 +1,96 @@
 name: QA Automation Pipeline
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
 
 jobs:
   api-tests:
-    name: "Testes de API - Petstore"
+    name: "API Tests - Petstore"
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout do código
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Instalar Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+          cache: 'pip'
 
-      - name: Instalar dependências
-        run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Executar testes de API
-        run: pytest api/tests/ -v
+      - name: Run API tests
+        run: |
+          pytest api/tests/ -v --tb=short --junit-xml=api-test-results.xml
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: api-test-results.xml
+          check_name: API Test Results
 
   web-tests:
-    name: "Testes Web - SauceDemo"
+    name: "Web Tests - SauceDemo"
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout do código
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Instalar Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+          cache: 'pip'
 
-      - name: Instalar dependências
-        run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Executar testes web (headless)
+      - name: Run web tests (headless)
         env:
           CI: true
-        run: pytest web/tests/ -v
+        run: |
+          pytest web/tests/ -v --tb=short --junit-xml=web-test-results.xml
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: web-test-results.xml
+          check_name: Web Test Results
+
+  smoke-tests:
+    name: "Smoke Tests"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run smoke tests
+        env:
+          CI: true
+        run: |
+          pytest -m smoke -v --tb=short
