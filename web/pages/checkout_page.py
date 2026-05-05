@@ -1,11 +1,8 @@
 from web.pages.base_page import BasePage
-from web.locators.locators import CartLocators, CheckoutLocators
+from web.locators.locators import CheckoutLocators
 
 
 class CheckoutPage(BasePage):
-    def proceed_to_checkout(self):
-        self.click(CartLocators.CHECKOUT_BUTTON)
-
     def fill_info(self, first_name, last_name, postal_code):
         self.type_text(CheckoutLocators.FIRST_NAME, first_name)
         self.type_text(CheckoutLocators.LAST_NAME, last_name)
@@ -17,3 +14,6 @@ class CheckoutPage(BasePage):
 
     def get_confirmation_message(self):
         return self.get_text(CheckoutLocators.COMPLETE_HEADER)
+    
+    def get_error_message(self):
+        return self.get_text(CheckoutLocators.ERROR_MESSAGE)
